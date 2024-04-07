@@ -34,7 +34,7 @@ This lab sets up insecure secrets that are in plain text in the configurations. 
 
 ## Supported applications
 
-- InfluxDB v2: http://localhost:8086 | username=admin, password=admin123456, token=AnUnsecureTokenYouShouldProbablyChangeThis
+- InfluxDB v2: http://localhost:8086 | username=admin, password=admin123456, token=AnInsecureTokenYouShouldProbablyChangeThis
 - Telegraf
 - Grafana: http://localhost:3000 | username=admin, password=admin123456
 

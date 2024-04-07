@@ -16,7 +16,7 @@ services:
       - DOCKER_INFLUXDB_INIT_PASSWORD=admin123456
       - DOCKER_INFLUXDB_INIT_ORG=sre
       - DOCKER_INFLUXDB_INIT_BUCKET=cdm
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=AnUnsecureTokenYouShouldProbablyChangeThis
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=AnInsecureTokenYouShouldProbablyChangeThis
 
   telegraf:
     image: telegraf:latest

@@ -21,6 +21,6 @@ datasources:
       defaultBucket: monitoring
       tlsSkipVerify: false
     secureJsonData:
-      token: AnUnsecureTokenYouShouldProbablyChangeThis
+      token: AnInsecureTokenYouShouldProbablyChangeThis
     version: 1
     editable: true

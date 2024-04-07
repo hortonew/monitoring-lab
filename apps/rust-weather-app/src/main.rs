@@ -22,7 +22,7 @@ struct WeatherData {
 async fn write_weather_data() -> Result<(), Box<dyn std::error::Error>> {
     let host = env::var("INFLUXDB_HOST").unwrap_or_else(|_| "http://influxdb2:8086".to_string());
     let org = env::var("INFLUXDB_ORG").unwrap_or_else(|_| "sre".to_string());
-    let token = env::var("INFLUXDB_TOKEN").unwrap_or_else(|_| "AnUnsecureTokenYouShouldProbablyChangeThis".to_string());
+    let token = env::var("INFLUXDB_TOKEN").unwrap_or_else(|_| "AnInsecureTokenYouShouldProbablyChangeThis".to_string());
     let bucket = "weather";
 
     let client = Client::new(host, org, token);

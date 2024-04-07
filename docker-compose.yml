@@ -1,0 +1,88 @@
+version: '3.8'
+services:
+  influxdb2:
+    build:
+      context: ./configurations/influxdb
+      dockerfile: Dockerfile
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb2-data:/var/lib/influxdb2
+      - influxdb2-config:/etc/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123456
+      - DOCKER_INFLUXDB_INIT_ORG=sre
+      - DOCKER_INFLUXDB_INIT_BUCKET=cdm
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=AnUnsecureTokenYouShouldProbablyChangeThis
+
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    volumes:
+    # telegraf config /etc/telegraf/telegraf.conf -test
+    - ./configurations/telegraf/etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb2
+    links:
+      - influxdb2
+    ports:
+    - '127.0.0.1:8125:8125/udp'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - influxdb2
+    links:
+      - influxdb2
+    ports:
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./configurations/grafana/provisioning/:/etc/grafana/provisioning/
+      - ./configurations/grafana/dashboards/:/var/lib/grafana/dashboards/
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123456
+      - GF_INSTALL_PLUGINS=
+
+  rust-weather-app:
+    container_name: rust-weather-app
+    build:
+      context: ./apps/rust-weather-app
+      dockerfile: Dockerfile
+    depends_on:
+      - influxdb2
+    links:
+      - influxdb2
+
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "root"
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+    cap_add:
+      - IPC_LOCK
+    restart: unless-stopped
+    command: "server -dev"
+    links:
+      - telegraf
+
+  go-load-test-vault:
+    container_name: go-load-test-vault
+    build:
+      context: ./apps/vault-load-test
+      dockerfile: Dockerfile
+    depends_on:
+      - influxdb2
+      - vault
+volumes:
+  influxdb2-data:
+  influxdb2-config:
+  grafana_data: {}

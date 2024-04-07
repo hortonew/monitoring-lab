@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./apps/rust-weather-app/Cargo.toml"
+    ]
+}

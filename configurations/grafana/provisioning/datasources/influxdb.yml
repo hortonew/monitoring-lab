@@ -1,0 +1,26 @@
+# config file version
+apiVersion: 1
+
+# list of datasources that should be deleted from the database
+deleteDatasources:
+  - name: Influxdb
+    orgId: 1
+
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://influxdb2:8086
+    database: "monitoring"
+    basicAuth: false
+    isDefault: true
+    jsonData:
+      timeInterval: "5s"
+      version: Flux
+      organization: sre
+      defaultBucket: monitoring
+      tlsSkipVerify: false
+    secureJsonData:
+      token: AnUnsecureTokenYouShouldProbablyChangeThis
+    version: 1
+    editable: true

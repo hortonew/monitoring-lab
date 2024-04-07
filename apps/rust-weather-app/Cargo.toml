@@ -1,0 +1,14 @@
+[package]
+name = "rust-monitoring"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = "0.4.37"
+futures = "0.3.30"
+influxdb2 = "0.5.0"
+influxdb2-derive = "0.1.1"
+influxdb2-structmap = "0.2.0"
+num-traits = "0.2.18"
+rand = "0.8.5"
+tokio = { version = "1.37.0", features = ["full"] }

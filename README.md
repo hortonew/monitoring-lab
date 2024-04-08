@@ -18,6 +18,7 @@ Starting the lab sets up a few things.
 3. Grafana, with an integration to Influxdb
 4. A custom rust application that writes fake weather data into Influxdb
 5. A custom go application that load tests Vault (and the performance data is logged to Influxdb via the Telegraf input)
+6. Prometheus, using the blackbox_exporter to check HTTP status on a few endpoints
 
 ## Warning
 
@@ -37,6 +38,7 @@ This lab sets up insecure secrets that are in plain text in the configurations. 
 - InfluxDB v2: http://localhost:8086 | username=admin, password=admin123456, token=AnInsecureTokenYouShouldProbablyChangeThis
 - Telegraf
 - Grafana: http://localhost:3000 | username=admin, password=admin123456
+- Prometheus: http://localhost:9090
 
 ## Custom applications
 
@@ -59,3 +61,24 @@ This lab sets up insecure secrets that are in plain text in the configurations. 
 
 ### InfluxDB Weather
 ![Weather Data](images/influxdb-weather.png)
+
+### Prometheus
+
+These inputs are created with the blackbox_exporter config.
+
+![Prometheus](images/prometheus.png)
+
+### Grafana Datasources
+
+These datasources are automatically created and ready to use on dashboards.
+
+![Grafana Datasources](images/grafana-datasources.png)
+
+### Grafana Prometheus Data
+![Grafana Prometheus Data](images/grafana-prometheus-data.png)
+
+### Grafana Dashboard
+
+This dashboard is automatically created with [configurations/grafana/provisioning/dashboards/example.json](configurations/grafana/provisioning/dashboards/example.json).
+
+![Grafana Dashboard](images/grafana-dashboard.png)

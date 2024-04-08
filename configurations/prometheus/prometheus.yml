@@ -1,0 +1,30 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "influxdb_http_check"
+    metrics_path: /probe
+    params:
+      module: [http_2xx_check]
+      target: ["http://influxdb:8086"]
+    static_configs:
+      - targets:
+          - "blackbox_exporter:9115"
+
+  - job_name: "grafana_http_check"
+    metrics_path: /probe
+    params:
+      module: [http_2xx_check]
+      target: ["http://grafana:3000"]
+    static_configs:
+      - targets:
+          - "blackbox_exporter:9115"
+
+  - job_name: "vault_http_check"
+    metrics_path: /probe
+    params:
+      module: [http_2xx_check]
+      target: ["http://vault:8200"]
+    static_configs:
+      - targets:
+          - "blackbox_exporter:9115"

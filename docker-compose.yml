@@ -26,28 +26,22 @@ services:
     - ./configurations/telegraf/etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     depends_on:
       - influxdb2
-    links:
-      - influxdb2
-    ports:
-    - '127.0.0.1:8125:8125/udp'
 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     depends_on:
       - influxdb2
-    links:
-      - influxdb2
     ports:
       - '127.0.0.1:3000:3000'
     volumes:
       - grafana_data:/var/lib/grafana
       - ./configurations/grafana/provisioning/:/etc/grafana/provisioning/
-      - ./configurations/grafana/dashboards/:/var/lib/grafana/dashboards/
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin123456
-      - GF_INSTALL_PLUGINS=
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
 
   rust-weather-app:
     container_name: rust-weather-app
@@ -55,8 +49,6 @@ services:
       context: ./apps/rust-weather-app
       dockerfile: Dockerfile
     depends_on:
-      - influxdb2
-    links:
       - influxdb2
 
   vault:
@@ -71,8 +63,6 @@ services:
       - IPC_LOCK
     restart: unless-stopped
     command: "server -dev"
-    links:
-      - telegraf
 
   go-load-test-vault:
     container_name: go-load-test-vault
@@ -82,7 +72,38 @@ services:
     depends_on:
       - influxdb2
       - vault
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./configurations/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - influxdb2
+      - vault
+      - telegraf
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox_exporter
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./configurations/blackbox_exporter/config.yml:/config/blackbox.yml
+    command:
+      - '--config.file=/config/blackbox.yml'
+
 volumes:
   influxdb2-data:
   influxdb2-config:
   grafana_data: {}
+  prometheus_data: {}
+

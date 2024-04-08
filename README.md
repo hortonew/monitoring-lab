@@ -4,7 +4,9 @@ A docker lab for testing applications
 
 ## About this project
 
-Starting the lab sets up a few things.
+![Monitoring Lab](images/monitoring-lab.png)
+
+Starting the lab sets up the following:
 
 1. Influxdb, with 4 buckets.
     1. cdm (cpu/disk/memory)
@@ -16,9 +18,10 @@ Starting the lab sets up a few things.
     2. inputs for cdm/system data
     3. inputs for Hashicorp Vault data
 3. Grafana, with an integration to Influxdb
-4. A custom rust application that writes fake weather data into Influxdb
-5. A custom go application that load tests Vault (and the performance data is logged to Influxdb via the Telegraf input)
-6. Prometheus, using the blackbox_exporter to check HTTP status on a few endpoints
+4. Hashicorp Vault
+5. A custom rust application that writes fake weather data into Influxdb
+6. A custom go application that load tests Vault (and the performance data is logged to Influxdb via the Telegraf input)
+7. Prometheus, using the blackbox_exporter to check HTTP status on a few endpoints
 
 ## Warning
 

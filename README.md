@@ -85,3 +85,11 @@ These datasources are automatically created and ready to use on dashboards.
 This dashboard is automatically created with [configurations/grafana/provisioning/dashboards/example.json](configurations/grafana/provisioning/dashboards/example.json).
 
 ![Grafana Dashboard](images/grafana-dashboard.png)
+
+## 👨‍💻 Configure
+
+### Set up a new influxdb bucket
+
+1. Edit [configurations/influxdb/scripts/create_buckets.sh](configurations/influxdb/scripts/create_buckets.sh)
+2. Add a new `influx bucket create` command for the organization you are using (e.g. `influx bucket create -n my_new_bucket -o sre -r 0`)
+3. Run `make rebuild`

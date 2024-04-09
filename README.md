@@ -2,7 +2,7 @@
 
 A docker lab for testing applications
 
-## About this project
+## 💬 About this project
 
 ![Monitoring Lab](images/monitoring-lab.png)
 
@@ -23,32 +23,32 @@ Starting the lab sets up the following:
 6. A custom go application that load tests Vault (and the performance data is logged to Influxdb via the Telegraf input)
 7. Prometheus, using the blackbox_exporter to check HTTP status on a few endpoints
 
-## Warning
+## ⚠️ Warning
 
 This lab sets up insecure secrets that are in plain text in the configurations.  These are not meant for production use.  Use at your own risk.
 
-## Dependencies
+## 🤝 Dependencies
 
 - docker
 - docker-compose
 
-## Quickstart
+## ⏩ Quickstart
 
 `make build`
 
-## Supported applications
+## 👍 Supported applications
 
 - InfluxDB v2: http://localhost:8086 | username=admin, password=admin123456, token=AnInsecureTokenYouShouldProbablyChangeThis
 - Telegraf
 - Grafana: http://localhost:3000 | username=admin, password=admin123456
 - Prometheus: http://localhost:9090
 
-## Custom applications
+## 🤙 Custom applications
 
 - rust-weather-app
 - vault-load-test (Go)
 
-## Examples
+## 🎦 Examples
 
 ### Weather Data
 ![Weather Data](images/weather.png)

@@ -3,8 +3,15 @@ use futures::prelude::*;
 use influxdb2::Client;
 use influxdb2_derive::WriteDataPoint;
 use rand::Rng;
+use reqwest;
+use serde::Deserialize;
 use std::env;
 use tokio;
+
+#[derive(Deserialize, Debug)]
+struct FeatureResponse {
+    enabled: bool,
+}
 
 #[derive(Default, Debug, WriteDataPoint)]
 #[measurement = "weather"]
@@ -17,6 +24,20 @@ struct WeatherData {
     humidity: u64,
     #[influxdb(timestamp)]
     time: i64, // Timestamp of the data in nanoseconds
+}
+
+async fn is_feature_enabled(feature_name: &str) -> Result<bool, Box<dyn std::error::Error>> {
+    // Generic HTTP request to the Unleash API
+    // SDK examples aren't working so use this as alternative
+    let client = reqwest::Client::new();
+    let response = client
+        .get(format!("http://unleashweb:4242/api/client/features/{}", feature_name))
+        .header("Authorization", "default:development.unleash-insecure-api-token")
+        .send()
+        .await?;
+
+    let feature_response: FeatureResponse = response.json().await?;
+    Ok(feature_response.enabled)
 }
 
 async fn write_weather_data() -> Result<(), Box<dyn std::error::Error>> {
@@ -40,5 +61,17 @@ async fn write_weather_data() -> Result<(), Box<dyn std::error::Error>> {
 }
 #[tokio::main]
 async fn main() {
-    write_weather_data().await.unwrap();
+    let feature_name = "weather_data";
+
+    match is_feature_enabled(feature_name).await {
+        Ok(enabled) => {
+            if enabled {
+                println!("Feature '{}' is enabled.", feature_name);
+                write_weather_data().await.unwrap();
+            } else {
+                println!("Feature '{}' is disabled.", feature_name);
+            }
+        }
+        Err(e) => eprintln!("Error checking feature flag: {}", e),
+    }
 }

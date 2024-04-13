@@ -2,11 +2,22 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"sync"
 	"time"
 
+	"github.com/Unleash/unleash-client-go/v3"
 	"github.com/hashicorp/vault/api"
 )
+
+func init() {
+	unleash.Initialize(
+		unleash.WithListener(&unleash.DebugListener{}),
+		unleash.WithAppName("default"),
+		unleash.WithUrl("http://unleashweb:4242/api/"),
+		unleash.WithCustomHeaders(http.Header{"Authorization": {"default:development.unleash-insecure-api-token"}}),
+	)
+}
 
 var (
 	initialConcurrency = 10
@@ -28,31 +39,32 @@ func main() {
 	time.Sleep(5 * time.Second)
 	client, _ := createVaultClient(vaultAddress)
 	writeInitialSecret(client)
-
 	currentConcurrency := initialConcurrency
 
 	for {
-		fmt.Printf("Testing with %d concurrent requests.\n", currentConcurrency)
-		avgLatency, errRate := loadTestVault(client, currentConcurrency)
-		fmt.Printf("Average latency: %v, Error rate: %v%%\n", avgLatency, errRate*100)
+		if unleash.IsEnabled("load_test_hashicorp_vault") {
+			fmt.Printf("Testing with %d concurrent requests.\n", currentConcurrency)
+			avgLatency, errRate := loadTestVault(client, currentConcurrency)
+			fmt.Printf("Average latency: %v, Error rate: %v%%\n", avgLatency, errRate*100)
 
-		// Calculate PID
-		error := targetError - errRate
-		integral += error
-		derivative := error - lastError
-		adjustment := kp*error + ki*integral + kd*derivative
-		fmt.Printf("PID Adjustment: %v (P: %v, I: %v, D: %v)\n", adjustment, kp*error, ki*integral, kd*derivative)
+			// Calculate PID
+			error := targetError - errRate
+			integral += error
+			derivative := error - lastError
+			adjustment := kp*error + ki*integral + kd*derivative
+			fmt.Printf("PID Adjustment: %v (P: %v, I: %v, D: %v)\n", adjustment, kp*error, ki*integral, kd*derivative)
 
-		// Apply PID output to adjust concurrency
-		newConcurrency := currentConcurrency + int(adjustment)
-		if newConcurrency > maxConcurrency {
-			newConcurrency = maxConcurrency
-		} else if newConcurrency < 1 {
-			newConcurrency = 1
+			// Apply PID output to adjust concurrency
+			newConcurrency := currentConcurrency + int(adjustment)
+			if newConcurrency > maxConcurrency {
+				newConcurrency = maxConcurrency
+			} else if newConcurrency < 1 {
+				newConcurrency = 1
+			}
+			currentConcurrency = newConcurrency
+
+			lastError = error
 		}
-		currentConcurrency = newConcurrency
-
-		lastError = error
 		time.Sleep(1 * time.Second)
 	}
 }

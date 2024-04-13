@@ -1,0 +1,8 @@
+auth_modules:
+  unleash_db:
+    type: userpass
+    userpass:
+      username: postgres
+      password: unleash
+    options:
+      sslmode: disable

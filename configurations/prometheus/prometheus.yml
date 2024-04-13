@@ -28,3 +28,28 @@ scrape_configs:
     static_configs:
       - targets:
           - "blackbox_exporter:9115"
+
+  - job_name: "unleashweb_http_check"
+    metrics_path: /probe
+    params:
+      module: [http_2xx_check]
+      target: ["http://unleashweb:4242"]
+    static_configs:
+      - targets:
+          - "blackbox_exporter:9115"
+
+  - job_name: "unleashdb_http_check"
+    metrics_path: /probe
+    params:
+      module: [http_2xx_check]
+      target: ["http://unleashdb:5432"]
+    static_configs:
+      - targets:
+          - "blackbox_exporter:9115"
+
+  - job_name: "postgresql_unleashdb"
+    params:
+      auth_module: [unleash_db]
+    static_configs:
+      - targets:
+          - "postgres_exporter_unleashdb:9187"

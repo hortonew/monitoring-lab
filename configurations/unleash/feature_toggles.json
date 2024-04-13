@@ -1,0 +1,60 @@
+{
+    "features": [
+        {
+            "name": "load_test_hashicorp_vault",
+            "description": "Whether load balancing of Vault is enabled.",
+            "type": "operational",
+            "project": "default",
+            "stale": false,
+            "impressionData": false,
+            "archived": false
+        },
+        {
+            "name": "weather_data",
+            "description": "Toggle weather data collection or not",
+            "type": "operational",
+            "project": "default",
+            "stale": false,
+            "impressionData": false,
+            "archived": false
+        }
+    ],
+    "featureStrategies": [
+        {
+            "name": "flexibleRollout",
+            "id": "6a2fc0ac-e3f9-40ea-a9fe-d8811600722d",
+            "featureName": "load_test_hashicorp_vault",
+            "title": null,
+            "parameters": {
+                "groupId": "load_test_hashicorp_vault",
+                "rollout": "100",
+                "stickiness": "default"
+            },
+            "constraints": [],
+            "variants": [],
+            "disabled": false,
+            "segments": []
+        }
+    ],
+    "featureEnvironments": [
+        {
+            "enabled": false,
+            "featureName": "load_test_hashicorp_vault",
+            "environment": "development",
+            "variants": [],
+            "name": "load_test_hashicorp_vault"
+        },
+        {
+            "enabled": false,
+            "featureName": "weather_data",
+            "environment": "development",
+            "variants": [],
+            "name": "weather_data"
+        }
+    ],
+    "contextFields": [],
+    "featureTags": [],
+    "segments": [],
+    "tagTypes": [],
+    "dependencies": []
+}

@@ -21,8 +21,9 @@ Starting the lab sets up the following:
 4. Hashicorp Vault
 5. A custom rust application that writes fake weather data into Influxdb
 6. A custom go application that load tests Vault (and the performance data is logged to Influxdb via the Telegraf input)
-7. Prometheus, using the blackbox_exporter to check HTTP status on a few endpoints
-8. Unleash, for feature flags
+7. A custom python application that runs Playwright to do synthetic monitoring of some of the applications.
+8. Prometheus, using the blackbox_exporter to check HTTP status on a few endpoints
+9. Unleash, for feature flags
 
 ## ⚠️ Warning
 
@@ -49,6 +50,7 @@ This lab sets up insecure secrets that are in plain text in the configurations. 
 
 - rust-weather-app
 - vault-load-test (Go)
+- python-synthetic-monitoring
 
 ## 🎦 Examples
 
@@ -57,6 +59,9 @@ This lab sets up insecure secrets that are in plain text in the configurations. 
 
 ### Vault Load Test
 ![Vault Load Test](images/vault-load-test.png)
+
+### Synthetic Monitoring
+![Python Synthetic Monitoring](images/python-synthetic-monitoring.png)
 
 ### InfluxDB Vault Reads
 ![InfluxDB Vault Reads](images/influxdb-vault-reads.png)

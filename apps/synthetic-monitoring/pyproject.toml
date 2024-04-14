@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "synthetic-monitoring"
+version = "0.1.0"
+description = "Synthetic monitoring for web applications"
+authors = ["YourName <yourname@email.com>"]
+readme = "README.md"
+packages = [{ include = "synthetic-monitoring", from = "src/" }]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+playwright = "^1.43.0"
+attrs = "^23.2.0"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "*"
+ruff = "*"
+pytest = "*"
+pytest-playwright = "*"
+pytest-cov = "*"
+pytest-rich = "*"
+pytest-sugar = "*"
+pytest-xdist = "*"
+pytest-randomly = "*"
+pytest-repeat = "*"
+
+[build-system]
+requires = ["poetry>=1.0"]
+build-backend = "poetry.masonry.api"
+
+[tool.ruff]
+line-length = 120
+
+[tool.mypy]
+python_version = "3.10"
+mypy_path = "src/synthetic-monitoring"
+
+[tool.mypy-environment]
+ignore_missing_imports = true
+
+[tool.pycln]
+all = true
+
+[tool.pyright]

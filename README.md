@@ -52,6 +52,8 @@ This lab sets up insecure secrets that are in plain text in the configurations. 
 - vault-load-test (Go)
 - python-synthetic-monitoring
 
+![Synthetic Monitoring](images/synthetic-monitoring.png)
+
 ## 🎦 Examples
 
 ### Weather Data
